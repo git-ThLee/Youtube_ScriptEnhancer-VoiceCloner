@@ -34,6 +34,6 @@ jobs:
       uses: GoogleCloudPlatform/github-actions/deploy@main
       with:
         credentials: ${{ secrets.GCP_SA_KEY }}
-        project_id: your-gcp-project-id
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
         app: your-app-name
         version: ${{ github.sha }}
