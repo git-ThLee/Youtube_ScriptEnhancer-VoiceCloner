@@ -160,3 +160,12 @@ cython_debug/
 #.idea/
 
 ysevc
+test
+save_merged_modify
+save_merged
+save
+src/beep.wav
+src/beep_sound_big.wav
+models
+위스퍼_ko_en_비교실험_결과
+langchain_run.py
