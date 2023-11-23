@@ -251,20 +251,18 @@ def main():
         ###############################
         st.title('This is Our Script and Video')
         placeholder_compare_videos = st.empty()
-        # with placeholder_compare_videos.container():
-        #     compare_videos_youtube_col, compare_videos_ours_col = st.columns(2)
-        #     with compare_videos_youtube_col:
-        #         #compare_videos_youtube()
-        #         compare_scripts_ours()
-        #     with compare_videos_ours_col:
-        #         compare_videos_ours()
+        with placeholder_compare_videos.container():
+            compare_videos_youtube_col, compare_videos_ours_col = st.columns(2)
+            with compare_videos_youtube_col:
+                #compare_videos_youtube()
+                compare_scripts_ours()
+            with compare_videos_ours_col:
+                compare_videos_ours()
 
 
 
     if st.button('🔁2'):
         pass
-
-
 
 if __name__ == "__main__":
     if not os.path.exists('save'):
