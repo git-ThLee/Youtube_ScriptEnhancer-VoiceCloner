@@ -5,7 +5,7 @@ import streamlit as st
 import os
 import re 
 
-BEEP_WAV_DIR = os.path.join('src, beep_loop.wav')
+BEEP_WAV_DIR = os.path.join('src', 'beep_loop.wav')
 
 OUTPUT_SAVE_DIR = 'save'
 OUTPUT_SAVE_MERGED_DIR = 'save_merged'
@@ -24,11 +24,8 @@ def insert_url_form():
             
             url_samples = {
                 '-' : 'https://www.youtube.com/~',
-                '경영자들 유튜브(20분)' : 'https://www.youtube.com/watch?v=obFRJ2RA-JA',
-                '엄태웅 전화 욕설(5분)': 'https://www.youtube.com/watch?v=-g_0M8zsBJw',
-                '텔론 게임 영상(13분)' : 'https://www.youtube.com/watch?v=fRGxl-qmKcg',
                 '보이스피싱(1분)' : 'https://www.youtube.com/watch?v=f5poE8iMGcw',
-                'CLIP 논문 리뷰(20분)' : 'https://www.youtube.com/watch?v=dELmmuKBUtI&t=794s',
+                'Controllable Generation(1분 30초)' : 'https://www.youtube.com/watch?v=VHWQsned0Qc',
             }
             url_sample_selected = st.selectbox(
                 'Sample',
@@ -224,15 +221,14 @@ def main():
     )
     if st.button('🔁'):
         pass
-    # 최상단 
-    # 타이틀, URL 입력, Play 버튼 
+
     insert_url_form()
             
     if 'video_title' in st.session_state:
         ###############################
         ### 스크립트(자막) 비교
         ###############################
-        st.title('This is YouTube Script and Video')
+        st.title('This is YouTube Original Script and Video')
         st.write(f"**Language** : **{st.session_state.transcript_language}**", unsafe_allow_html=True)
 
         placeholder_compare_scripts = st.empty()
@@ -241,10 +237,8 @@ def main():
             with compare_scripts_youtube_col:
                 compare_scripts_youtube()
             with compare_scripts_ours_col:
-                #compare_scripts_ours()
                 compare_videos_youtube()
 
-        #compare_scripts()
         st.divider()
         ###############################
         ### 비디오 비교
@@ -254,7 +248,6 @@ def main():
         with placeholder_compare_videos.container():
             compare_videos_youtube_col, compare_videos_ours_col = st.columns(2)
             with compare_videos_youtube_col:
-                #compare_videos_youtube()
                 compare_scripts_ours()
             with compare_videos_ours_col:
                 compare_videos_ours()
