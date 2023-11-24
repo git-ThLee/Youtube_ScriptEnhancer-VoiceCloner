@@ -5,7 +5,7 @@ import streamlit as st
 import os
 import re 
 
-BEEP_WAV_DIR = r'src\beep_loop.wav'
+BEEP_WAV_DIR = os.path.join('src, beep_loop.wav')
 
 OUTPUT_SAVE_DIR = 'save'
 OUTPUT_SAVE_MERGED_DIR = 'save_merged'
