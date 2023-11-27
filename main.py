@@ -11,7 +11,7 @@ OUTPUT_SAVE_DIR = 'save'
 OUTPUT_SAVE_MERGED_DIR = 'save_merged'
 OUTPUT_SAVE_MERGED_MODIFY_DIR = 'save_merged_modify'
 
-STOPWORDS = ['시발','새끼','쌔끼','씹','뒤질래','비우신색']
+STOPWORDS = ['시발','새끼','쌔끼','씹','뒤질래','비우신색','씨발','쌍년','썅년','미친','시빨','좆밥']
 STOPWORDS_PATTERN = re.compile('|'.join(map(re.escape, STOPWORDS)))
 
 def insert_url_form():
@@ -25,7 +25,6 @@ def insert_url_form():
             url_samples = {
                 '-' : 'https://www.youtube.com/~',
                 '보이스피싱(1분)' : 'https://www.youtube.com/watch?v=f5poE8iMGcw',
-                '라이타를켜라(30초)' : 'https://www.youtube.com/watch?v=H4RgebDt390',
                 '더글로리(40초)': "https://www.youtube.com/watch?v=bGFkdfYPPAo",
                 '멜로가체질(55초)':'https://www.youtube.com/watch?v=t7aJ1WvVCCI',
                 '카지노(37초)':'https://www.youtube.com/watch?v=5-7NPzsgAag',
