@@ -25,7 +25,10 @@ def insert_url_form():
             url_samples = {
                 '-' : 'https://www.youtube.com/~',
                 '보이스피싱(1분)' : 'https://www.youtube.com/watch?v=f5poE8iMGcw',
-                'Controllable Generation(1분 30초)' : 'https://www.youtube.com/watch?v=VHWQsned0Qc',
+                '라이타를켜라(30초)' : 'https://www.youtube.com/watch?v=H4RgebDt390',
+                '더글로리(40초)': "https://www.youtube.com/watch?v=bGFkdfYPPAo",
+                '멜로가체질(55초)':'https://www.youtube.com/watch?v=t7aJ1WvVCCI',
+                '카지노(37초)':'https://www.youtube.com/watch?v=5-7NPzsgAag',
             }
             url_sample_selected = st.selectbox(
                 'Sample',
