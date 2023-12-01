@@ -31,7 +31,7 @@
 
 import whisper
 import time
-model = whisper.load_model("small") # large-v2
+model = whisper.load_model("large-v2") # large-v2
 
 def transcribe(path):
   print(f"Whisper Start")
