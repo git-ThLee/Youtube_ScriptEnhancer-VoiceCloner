@@ -1,3 +1,41 @@
+### 실행(run)
+
+```bash
+
+# 0. ffmpeg 설치 
+# 윈도우 : 구글 검색 설치
+# 우분투
+sudo apt update
+sudo apt install ffmpeg
+ffmpeg -version
+
+# 1. 가상환경 생성
+python -m venv ysevc
+
+# 2. 가상환경 실행
+ysevc\Scripts\activate
+
+# 3. Whisper 설치
+pip install git+https://github.com/openai/whisper.git
+
+# 4. requirements.txt 설치
+pip install -r requirements.txt  
+
+# 5. Streamlit 실행
+streamlit run main.py
+
+```
+
+### 결과물(result)
+
+```
+결과물은 result 폴더에서 확인이 가능합니다.
+
+1. txt 파일 : 본 프로젝트를 통해 생성된 자막
+2. mp4 : 본 프로젝트를 통해 생성된 욕설이 삐소리 처리된 영상
+
+```
+
 ### 가상환경 
 
 ```

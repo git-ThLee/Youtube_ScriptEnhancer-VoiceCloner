@@ -204,13 +204,6 @@ def compare_videos_ours():
         st.session_state.merged_modify_mp4_filename = merged_modify_mp4_filename
         st.session_state.merged_modify_mp4_path = merged_modify_mp4_path
 
-        url_samples = {
-                '-' : 'https://www.youtube.com/~',
-                '보이스피싱(1분)' : 'https://www.youtube.com/watch?v=f5poE8iMGcw',
-                '더글로리(40초)': "https://www.youtube.com/watch?v=bGFkdfYPPAo",
-                '멜로가체질(55초)':'https://www.youtube.com/watch?v=t7aJ1WvVCCI',
-                '카지노(37초)':'https://www.youtube.com/watch?v=5-7NPzsgAag',
-            }
         if st.session_state.url_video_key == "https://www.youtube.com/watch?v=bGFkdfYPPAo" :
             video_file = open('sample\더글로리.mp4', 'rb')
             video_bytes = video_file.read()
