@@ -215,8 +215,6 @@ def main():
         layout="wide",
         initial_sidebar_state="expanded",
     )
-    # if st.button('🔁'):
-    #     pass
 
     insert_url_form()
             
@@ -247,11 +245,6 @@ def main():
                 compare_scripts_ours()
             with compare_videos_ours_col:
                 compare_videos_ours()
-
-
-
-    # if st.button('🔁2'):
-    #     pass
 
 if __name__ == "__main__":
     if not os.path.exists('save'):

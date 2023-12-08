@@ -75,7 +75,7 @@ streamlit run main.py
 - Model : Whisper-small
 - GPU : 4060 Ti
 - 입력 : 약 1분 길이의 영상
-- 시간 : 평균 13초 소요
+- 시간 : 평균 13초 소요 (동일한 조건으로 Whisper-large-v2 는 약 130초 소요)
 ```
 
 ```
