@@ -1,9 +1,16 @@
 import youtube 
 import speech_to_text
 
+import torch
 import streamlit as st
 import os
 import re 
+import whisper
+
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+MODEL_SIZE = 'small' # large-v2
+MODEL = whisper.load_model(MODEL_SIZE, device=DEVICE)
 
 BEEP_WAV_DIR = os.path.join('src', 'beep_loop.wav')
 
@@ -11,7 +18,7 @@ OUTPUT_SAVE_DIR = 'save'
 OUTPUT_SAVE_MERGED_DIR = 'save_merged'
 OUTPUT_SAVE_MERGED_MODIFY_DIR = 'save_merged_modify'
 
-STOPWORDS = ['시발','새끼','쌔끼','씹','뒤질래','비우신색','씨발','쌍년','썅년','미친','시빨','좆밥']
+STOPWORDS = ['시발','새끼','쌔끼','씹','뒤질래','비우신색','씨발','쌍년','썅년','미친','시빨','좆밥','ㅅㅂ','애미','새키']
 STOPWORDS_PATTERN = re.compile('|'.join(map(re.escape, STOPWORDS)))
 
 def insert_url_form():
@@ -22,18 +29,6 @@ def insert_url_form():
             st.title('Youtube')
             st.title('Scripte-Enhancer & Voice-Cloner')
             
-            url_samples = {
-                '-' : 'https://www.youtube.com/~',
-                '보이스피싱(1분)' : 'https://www.youtube.com/watch?v=f5poE8iMGcw',
-                '더글로리(40초)': "https://www.youtube.com/watch?v=bGFkdfYPPAo",
-                '멜로가체질(55초)':'https://www.youtube.com/watch?v=t7aJ1WvVCCI',
-                '카지노(37초)':'https://www.youtube.com/watch?v=5-7NPzsgAag',
-            }
-            url_sample_selected = st.selectbox(
-                'Sample',
-                tuple(url_samples.keys())
-                )
-            
             progress_text = "잠시만 기다려주세요..."
             status_progress_ = st.progress(0, text=progress_text)
             status_progress_.empty()
@@ -41,7 +36,7 @@ def insert_url_form():
                 # URL to wav
                 col1 , col2 = st.columns([9, 1])
                 with col1 :
-                    youtube_url = st.text_input('Youtube URL', url_samples[url_sample_selected])
+                    youtube_url = st.text_input('Youtube URL', 'https://www.youtube.com/~')
                     
                 with col2 :
                     st.subheader("")
@@ -75,8 +70,6 @@ def insert_url_form():
 
                         st.session_state.transcript_language = transcript_language
                         st.session_state.transcript_fetchs = transcript_fetchs
-
-                        st.session_state.url_video_key = url_samples[url_sample_selected]
 
             except:
                 st.error('죄송합니다. 에러가 발생했습니다. URL 링크 확인해주시고, 문제가 지속될 경우 문의 주세요.', icon="🚨")
@@ -129,24 +122,11 @@ def compare_scripts_ours():
     #######################
     st.write("**Our Script**", unsafe_allow_html=True)
     with st.spinner(text='스크립트 생성 중이에요...영상이 길어서 늦어지고 있어요...') :
-        if st.session_state.url_video_key == "https://www.youtube.com/watch?v=bGFkdfYPPAo" :
-            with open('sample\더글로리.txt', 'r', encoding='utf-8') as file:
-                content = file.read()
-            our_script = [x for x in content.split('\n')]
-        elif st.session_state.url_video_key == "https://www.youtube.com/watch?v=t7aJ1WvVCCI" :
-            with open('sample\멜로가체질.txt', 'r', encoding='utf-8') as file:
-                content = file.read()
-            our_script = [x for x in content.split('\n')]
-        elif st.session_state.url_video_key == "https://www.youtube.com/watch?v=5-7NPzsgAag" :
-            with open('sample\카지노.txt', 'r', encoding='utf-8') as file:
-                content = file.read()
-            our_script = [x for x in content.split('\n')]
-        else:
-            # Whipser로 STT
-            transcript_fetchs_whisper = speech_to_text.transcribe(os.path.join(OUTPUT_SAVE_DIR, st.session_state.only_audio_mp3_filename ))
-            st.session_state.transcript_fetchs_whisper = transcript_fetchs_whisper['segments']
-            # Ours 스크립트 생성
-            our_script = [f"[{ int(round(x['start']//60,1)) }:{ '0'+str(int(round(x['start']%60,1))) if len(str(int(round(x['start']%60,1)))) == 1 else int(round(x['start']%60,1)) }] {x['text']}" for x in st.session_state.transcript_fetchs_whisper]
+        # Whipser로 STT
+        transcript_fetchs_whisper = speech_to_text.transcribe(os.path.join(OUTPUT_SAVE_DIR, st.session_state.only_audio_mp3_filename ), MODEL)
+        st.session_state.transcript_fetchs_whisper = transcript_fetchs_whisper['segments']
+        # Ours 스크립트 생성
+        our_script = [f"[{ int(round(x['start']//60,1)) }:{ '0'+str(int(round(x['start']%60,1))) if len(str(int(round(x['start']%60,1)))) == 1 else int(round(x['start']%60,1)) }] {x['text']}" for x in st.session_state.transcript_fetchs_whisper]
 
         tags_right = ["<td style='width: 1200px;'>", "<div style='overflow-y: scroll; height: 478px;'>"]
         for words in our_script :
@@ -204,42 +184,29 @@ def compare_videos_ours():
         st.session_state.merged_modify_mp4_filename = merged_modify_mp4_filename
         st.session_state.merged_modify_mp4_path = merged_modify_mp4_path
 
-        if st.session_state.url_video_key == "https://www.youtube.com/watch?v=bGFkdfYPPAo" :
-            video_file = open('sample\더글로리.mp4', 'rb')
-            video_bytes = video_file.read()
-            st.video(video_bytes)
-        elif st.session_state.url_video_key == "https://www.youtube.com/watch?v=t7aJ1WvVCCI" :
-            video_file = open('sample\멜로가체질.mp4', 'rb')
-            video_bytes = video_file.read()
-            st.video(video_bytes)
-        elif st.session_state.url_video_key == "https://www.youtube.com/watch?v=5-7NPzsgAag" :
-            video_file = open('sample\카지노.mp4', 'rb')
-            video_bytes = video_file.read()
-            st.video(video_bytes)
-        else:
-            # 욕설 검출 - start, end, text 
-            result_dict_list = []
-            for i, fetch in enumerate(st.session_state.transcript_fetchs_whisper):
-                if STOPWORDS_PATTERN.search(fetch['text']):
-                    for fetch_word in fetch['words']:
-                        if STOPWORDS_PATTERN.search(fetch_word['word']):
-                            result_dict = {
-                                'start': fetch_word['start'],
-                                'end': fetch_word['end'],
-                                'word': fetch_word['word']
-                            }
-                            result_dict_list.append(result_dict)
+        # 욕설 검출 - start, end, text 
+        result_dict_list = []
+        for i, fetch in enumerate(st.session_state.transcript_fetchs_whisper):
+            if STOPWORDS_PATTERN.search(fetch['text']):
+                for fetch_word in fetch['words']:
+                    if STOPWORDS_PATTERN.search(fetch_word['word']):
+                        result_dict = {
+                            'start': fetch_word['start'],
+                            'end': fetch_word['end'],
+                            'word': fetch_word['word']
+                        }
+                        result_dict_list.append(result_dict)
 
-            # 영상에서 욕설 제거 
-            youtube.modify_video(st.session_state.merged_mp4_path, 
-                BEEP_WAV_DIR, 
-                merged_modify_mp4_path, 
-                [(x['start'],x['end']) for x in result_dict_list]) # [(46.18, 46.68), (47.24, 47.88)])
+        # 영상에서 욕설 제거 
+        youtube.modify_video(st.session_state.merged_mp4_path, 
+            BEEP_WAV_DIR, 
+            merged_modify_mp4_path, 
+            [(x['start'],x['end']) for x in result_dict_list]) # [(46.18, 46.68), (47.24, 47.88)])
 
-            # 영상 보여주기 
-            video_file = open(merged_modify_mp4_path, 'rb')
-            video_bytes = video_file.read()
-            st.video(video_bytes)
+        # 영상 보여주기 
+        video_file = open(merged_modify_mp4_path, 'rb')
+        video_bytes = video_file.read()
+        st.video(video_bytes)
 
 def main():
     st.set_page_config(
@@ -248,8 +215,8 @@ def main():
         layout="wide",
         initial_sidebar_state="expanded",
     )
-    if st.button('🔁'):
-        pass
+    # if st.button('🔁'):
+    #     pass
 
     insert_url_form()
             
@@ -283,8 +250,8 @@ def main():
 
 
 
-    if st.button('🔁2'):
-        pass
+    # if st.button('🔁2'):
+    #     pass
 
 if __name__ == "__main__":
     if not os.path.exists('save'):

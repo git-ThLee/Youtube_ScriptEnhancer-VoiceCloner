@@ -1,9 +1,6 @@
-import whisper
 import time
 
-model = whisper.load_model("large-v2") # large-v2
-
-def transcribe(path):
+def transcribe(path, model):
   print(f"Whisper Start")
   # Speach to Text
   start_time = time.time()

@@ -1,4 +1,8 @@
-### 실행(run)
+### Version
+
+- Python 3.10
+
+### 0. 실행(run)
 
 ```bash
 # 0. ffmpeg 설치 
@@ -14,6 +18,9 @@ python -m venv ysevc
 # 2. 가상환경 실행
 ysevc\Scripts\activate
 
+# (별도) torch gpu 설치 
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
 # 3. Whisper 설치
 pip install -U openai-whisper
         or
@@ -26,13 +33,14 @@ pip install -r requirements.txt
 streamlit run main.py
 ```
 
-### 결과 
+### 1. 결과 (시연 영상)
 
-![image](img/결과화면.png)
+![video](img/시연영상.gif)
+
+- 자세히 보고 싶으시면 `result/시연영상.mp4` 가 있습니다
 
 
-
-### 결과 파일(result)
+### 2. 결과 파일(result)
 
 ```bash
 결과물은 result 폴더에서 확인이 가능합니다.
@@ -43,17 +51,19 @@ streamlit run main.py
 *욕설 표시는 코드에서 구현이 되어, txt파일에서 확인이 어렵습니다.
 ```
 
-### 속도(Speech-To-Text)
+### 3. 속도
+
+### 3.1 Speech-To-Text (STT)
 
 ```bash
-- Model : Whisper-large-v2
-- GPU : L4 
+- Model : Whisper-small
+- GPU : 4060 Ti
 - 입력 : 약 1분 길이의 영상
-- 시간 : 평균 10초 소요
+- 시간 : 평균 13초 소요
 ```
 
 ```
-- 개선 방법
+- 속도 개선 방법
     - Whisper.cpp 대체
     - Faster-Whisper 대체 
         1. 시도해봄
@@ -69,21 +79,27 @@ streamlit run main.py
             - 단, list()로 변환하는데 50초 이상이 걸림. 즉, 결국 일반 Whisper와 동일하거나 오히려 더 느린 결과가 나옴.
 ```
 
-### 속도(영상 편집)
+### 3.2 영상 편집
 
 ```
 # ffmpeg을 이용하여 영상을 편집함
 - 시간 : 영상 길이 1분 당 평균 1분이 걸림
+- 원리 : 
+    1. 욕설이 있는 프레임들 추출
+    2. ffmpeg를 이용해 욕설이 있는 프레임은 beep.wav로 대체
+    3. 그 외에는 원본 소리 사용
 ```
 
-### 성능
+### 4. 성능
+
+### 4.1 STT
 
 ```
-# STT 
 - 타입 : 정성적 평가
 - 이유 : 
     - 정량적 평가를 위한 라벨 구축의 어려움.
-    - 라벨 구축이 어려운 이유 : 영상을 보고, 자막을 직접 손으로 작성해야함. 이 과정은 시간이 오래 걸리며, 적은 개수로 정성적 평가 시도시 영상에 맡는 편파적인 결과가 나올 수 있음. 
+    - 라벨 구축이 어려운 이유 : 
+        - 영상을 보고, 자막을 직접 손으로 작성해야함. 이 과정은 시간이 오래 걸리며, 적은 개수로 정성적 평가 시도시 편파적인 결과(우리가 희망하는 평가 결과)가 나올 수 있음. 
 ```
 
 > 더글로리 영상(https://www.youtube.com/watch?v=bGFkdfYPPAo)
